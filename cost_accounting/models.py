@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+
+
 # Create your models here.
 
 
@@ -14,17 +16,6 @@ class Spending(models.Model):
 
     def __str__(self):
         return f'{self.payer} -> {self.category} | {self.amount}'
-
-
-class Group(models.Model):
-    name = models.CharField(max_length=30, verbose_name='Название группы')
-    members = models.ManyToManyField(User, verbose_name="Участники группы")
-
-    class Meta:
-        db_table = 'user_group'
-
-    def __str__(self):
-        return f'{self.name} | ({self.members.count()})'
 
 
 class Category(models.Model):
