@@ -28,3 +28,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ExtendedUser(models.Model):
+    """Описывает расширенную версию модели пользователя"""
+    profile_image = models.ImageField(verbose_name='Аватарка', blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
