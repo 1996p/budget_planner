@@ -22,8 +22,15 @@ def index(request):
     spendings = Spending.objects.filter(payer=request.user)
     amount = spendings.aggregate(Sum('amount'))['amount__sum']
     categories = Category.objects.filter()
-    return render(request, 'spendings.html', {'request': request, 'spendings': spendings,
-                                              'amount': amount})
+    form = AddCategory()
+    context = {
+        'request': request,
+        'spendings': spendings,
+        'amount': amount,
+        'form': form
+    }
+
+    return render(request, 'spendings.html', context)
 
 
 class RegistrationView(CreateView):

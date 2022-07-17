@@ -22,6 +22,7 @@ class Category(models.Model):
     """Описывает категории товаров, на которые человек тратит деньги"""
     title = models.CharField(max_length=50, verbose_name='Название категории')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name="Трата на группу", blank=True, null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Создатель категории')
 
     class Meta:
         db_table = 'spending_category'
