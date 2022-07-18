@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 from django.contrib.auth.models import User
 from .models import *
+from django.db.models import Q
 
 
 class UserRegister(UserCreationForm):
@@ -25,11 +26,27 @@ class UserAuthentication(AuthenticationForm):
 
 class AddCategory(forms.ModelForm):
     """Форма добавления новой категории трат"""
-    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
-    group = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control form-control-lg', 'placeholder': 'Название'}))
+    def __init__(self, *args, **kwargs):
+        super(AddCategory, self).__init__(*args, **kwargs)
+        self.fields['title'].widget.attrs = {'class': 'form-control form-control-lg'}
+        self.fields['group'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Название'}
+        self.fields['group'].queryset = Group.objects.all()
 
     class Meta:
         model = Category
         exclude = ('author', )
 
 
+class AddSpending(forms.ModelForm):
+    """Форма добавления новых расходов"""
+    def __init__(self, user, *args, **kwargs):
+        super(AddSpending, self).__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(Q(creator__isnull=True) | Q(creator=user))
+        self.fields['category'].widget.attrs = {'class': 'form-control form-control-lg'}
+
+        self.fields['amount'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'number', 'min': 0}
+
+    class Meta:
+        model = Spending
+        fields = ('category', 'amount')
+        exclude = ('payer',)

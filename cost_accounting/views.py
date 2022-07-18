@@ -21,13 +21,17 @@ def empty(request):
 def index(request):
     spendings = Spending.objects.filter(payer=request.user)
     amount = spendings.aggregate(Sum('amount'))['amount__sum']
-    categories = Category.objects.filter()
-    form = AddCategory()
+    categories = Category.objects.all()
+
+    add_category_form = AddCategory()
+    add_spending_form = AddSpending(user=request.user)
+
     context = {
         'request': request,
         'spendings': spendings,
         'amount': amount,
-        'form': form
+        'add_category_form': add_category_form,
+        'add_spending_form': add_spending_form,
     }
 
     return render(request, 'spendings.html', context)
