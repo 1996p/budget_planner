@@ -262,6 +262,16 @@
 									</div>
 									<div class="card-body">
 										<div id="monthlyChart" class="chart chart-pie"></div>
+                                    {% for amount in category_amounts %}
+                                        <span class="spending-percents" style="visibility: hidden">
+                                                {{ amount }}
+                                        </span>
+                                    {% endfor %}
+                                    {% for title in category_titles %}
+                                        <span class="spending-title" style="visibility: hidden">
+                                                {{ title }}
+                                        </span>
+                                    {% endfor %}
 									</div>
 								</div>
 							</div>

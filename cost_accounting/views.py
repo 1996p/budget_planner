@@ -17,7 +17,7 @@ def empty(request):
 class IndexPage(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
-        context = IndexPageLogic(request)
+        context = index_page_logic(request)
         return render(request, 'spendings.html', context)
 
 
@@ -52,13 +52,7 @@ class CreateNewSpending(View):
     """Отвечает за создание новых расходов в БД"""
 
     def post(self, request, *args, **kwargs):
-        user = request.user
-        _, spending_amount, category_id = request.POST.values()
-        category = Category.objects.get(pk=category_id)
-        new_spending = Spending.objects.create(payer=user,
-                                               amount=spending_amount,
-                                               category=category)
-        new_spending.save()
+        create_new_spending(request)
         return redirect('index')
 
 

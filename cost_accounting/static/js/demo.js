@@ -29,9 +29,23 @@ $.notify({
 
 // monthlyChart
 
+var spendings = document.querySelectorAll('.spending-percents')
+var spending_vals = []
+console.log(spendings)
+spendings.forEach(function(elem) {
+	spending_vals.push(parseInt(elem.textContent.trim()))
+})
+var titles = []
+document.querySelectorAll('.spending-title').forEach(function (elem){
+	titles.push(elem.textContent.trim())
+})
+
+
+
+
 Chartist.Pie('#monthlyChart', {
-	labels: ['50%', '20%', '30%'],
-	series: [50, 20, 30]
+	labels: titles,
+	series: spending_vals
 }, {
 	plugins: [
 	Chartist.plugins.tooltip()
