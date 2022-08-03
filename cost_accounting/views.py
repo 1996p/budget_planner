@@ -1,14 +1,11 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
-from django.db.models.aggregates import Sum
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth.models import User
 from django.views.generic import CreateView
-from django.contrib.auth.decorators import login_required
-from .forms import *
-from .models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .services import *
 # Create your views here.
 
 
@@ -17,24 +14,11 @@ def empty(request):
     return redirect('index')
 
 
-@login_required
-def index(request):
-    spendings = Spending.objects.filter(payer=request.user)
-    amount = spendings.aggregate(Sum('amount'))['amount__sum']
-    categories = Category.objects.all()
+class IndexPage(LoginRequiredMixin, View):
 
-    add_category_form = AddCategory()
-    add_spending_form = AddSpending(user=request.user)
-
-    context = {
-        'request': request,
-        'spendings': spendings,
-        'amount': amount,
-        'add_category_form': add_category_form,
-        'add_spending_form': add_spending_form,
-    }
-
-    return render(request, 'spendings.html', context)
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        context = IndexPageLogic(request)
+        return render(request, 'spendings.html', context)
 
 
 class RegistrationView(CreateView):
@@ -63,5 +47,18 @@ def logout_user(request):
     logout(request)
     return redirect('/')
 
+
+class CreateNewSpending(View):
+    """Отвечает за создание новых расходов в БД"""
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        _, spending_amount, category_id = request.POST.values()
+        category = Category.objects.get(pk=category_id)
+        new_spending = Spending.objects.create(payer=user,
+                                               amount=spending_amount,
+                                               category=category)
+        new_spending.save()
+        return redirect('index')
 
 
