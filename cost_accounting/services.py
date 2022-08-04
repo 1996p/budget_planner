@@ -12,12 +12,8 @@ def index_page_logic(request: HttpRequest) -> dict:
     amount = spendings.aggregate(Sum('amount'))['amount__sum']
     add_category_form = AddCategory()
     add_spending_form = AddSpending(user=request.user)
-    print(Category.objects.filter(Q(creator__isnull=True) | Q(creator=request.user)
-                                  | Q(group__user=User.objects.get(username=request.user.username))).distinct())
-    # print(User.objects.get(username=request.user.username))
-    # print(Group.objects.get(pk=1).user_set.filter(username=request.user.username))
-    # print(Group.objects.get(user=User.objects.get(username=request.user.username)))
     category_amount = defaultdict(int)
+    joined_groups = Group.objects.filter(user=User.objects.get(username=request.user.username)).count
 
     for spending in spendings:
         category_amount[spending.category.title] += spending.amount
@@ -29,7 +25,8 @@ def index_page_logic(request: HttpRequest) -> dict:
         'add_category_form': add_category_form,
         'add_spending_form': add_spending_form,
         'category_titles': category_amount.keys(),
-        'category_amounts': category_amount.values()
+        'category_amounts': category_amount.values(),
+        'joined_groups': joined_groups
     }
 
     return context
