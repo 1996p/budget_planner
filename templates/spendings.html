@@ -312,7 +312,7 @@
                                 </form>
                             </div>
                             <div class="col-md-6">
-                                <form class="card" method="post" action="#">
+                                <form class="card" method="post" action="{% url 'create-category' %}">
                                     {% csrf_token %}
                                     <div class="card-header">
                                         <div class="card-title">Создать собственную категорию трат</div>

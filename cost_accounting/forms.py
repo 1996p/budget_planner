@@ -41,9 +41,9 @@ class AddSpending(forms.ModelForm):
     """Форма добавления новых расходов"""
     def __init__(self, user, *args, **kwargs):
         super(AddSpending, self).__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.filter(Q(creator__isnull=True) | Q(creator=user))
+        self.fields['category'].queryset = Category.objects.filter(Q(creator__isnull=True) | Q(creator=user)
+                                  | Q(group__user=User.objects.get(username=user.username))).distinct()
         self.fields['category'].widget.attrs = {'class': 'form-control form-control-lg'}
-
         self.fields['amount'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'number', 'min': 0}
 
     class Meta:

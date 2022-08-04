@@ -1,3 +1,4 @@
+import django.forms
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse, HttpResponse
@@ -9,14 +10,14 @@ from .services import *
 # Create your views here.
 
 
-def empty(request):
+def empty(request: HttpRequest):
     """Заглушка, которая редикректит с '/' на 'cost_accounting'"""
     return redirect('index')
 
 
 class IndexPage(LoginRequiredMixin, View):
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         context = index_page_logic(request)
         return render(request, 'spendings.html', context)
 
@@ -27,7 +28,7 @@ class RegistrationView(CreateView):
     success_url = '/'
     form_class = UserRegister
 
-    def form_valid(self, form):
+    def form_valid(self, form: UserRegister):
         """Создает запись модели ExtendedUser, связанную с User"""
         user = form.save()
         extended_user = ExtendedUser.objects.create(user=user)
@@ -42,7 +43,7 @@ class AuthenticationView(LoginView):
     form_class = UserAuthentication
 
 
-def logout_user(request):
+def logout_user(request: HttpRequest):
     """Отвечает за выход пользователя из аккаунта"""
     logout(request)
     return redirect('/')
@@ -51,8 +52,17 @@ def logout_user(request):
 class CreateNewSpending(View):
     """Отвечает за создание новых расходов в БД"""
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args, **kwargs):
         create_new_spending(request)
         return redirect('index')
+
+
+class CreateNewCategory(View):
+    """Отвечает за создание новых категорий расходов в БД"""
+
+    def post(self, request: HttpRequest):
+        create_new_category(request)
+        return redirect('index')
+
 
 
