@@ -10,6 +10,8 @@ class Spending(models.Model):
     payer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Плательщик')
     amount = models.PositiveIntegerField(verbose_name='Потраченная сумма')
     category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name='Категория товара')
+    short_description = models.CharField(max_length=1000, verbose_name='Краткое описание', blank=True, null=True)
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания расходов', null=True)
 
     class Meta:
         db_table = 'spending'

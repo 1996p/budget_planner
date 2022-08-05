@@ -57,3 +57,12 @@ def create_new_category(request: HttpRequest) -> None:
                                                creator=user)
     new_category.save()
 
+
+def show_history(request: HttpRequest) -> dict:
+    """Описывает бизнес-логику отображение истории расходов,
+    создает контекстные переменные для шаблона"""
+    spendings = Spending.objects.filter(payer=request.user).order_by('-creation_date')
+    context = {
+        'spendings': spendings
+    }
+    return context

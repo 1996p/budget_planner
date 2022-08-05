@@ -65,4 +65,10 @@ class CreateNewCategory(View):
         return redirect('index')
 
 
+class SpendingsHistory(LoginRequiredMixin, View):
+    """Отвечает за отображение истории расходов на '/history/' """
+    def get(self, request, *args, **kwargs):
+        context = show_history(request)
+        return render(request, 'spendings-history.html', context)
+
 

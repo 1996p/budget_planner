@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="content">
+        <div class="card">
+            <div class="card-header ">
+                <h4 class="card-title">История расходов</h4>
+                <p class="card-category">Users Table</p>
+            </div>
+            <div class="card-body">
+                <table class="table table-head-bg-success table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        {% for spending in spendings %}
+                            <tr>
+                                <td>{{ spending.category.title }}</td>
+                                <td>{{ spending.amount }} ₽</td>
+                                <td>{{ spending.creation_date }}</td>
+                                {% if spending.category.group %}
+                                    <td>Групповая трата</td>
+                                {% else %}
+                                    <td>Личная трата</td>
+                                {% endif %}
+
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
