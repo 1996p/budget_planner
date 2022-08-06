@@ -11,31 +11,50 @@
                 <table class="table table-head-bg-success table-striped table-hover">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Категория</th>
+                            <th scope="col">Сумма</th>
+                            <th scope="col">Дата</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        {% for spending in spendings %}
-                            <tr>
-                                <td>{{ spending.category.title }}</td>
-                                <td>{{ spending.amount }} ₽</td>
-                                <td>{{ spending.creation_date }}</td>
-                                {% if spending.category.group %}
-                                    <td>Групповая трата</td>
-                                {% else %}
-                                    <td>Личная трата</td>
-                                {% endif %}
+                        {% for datetime, spendings in spendings_per_day %}
+                            {% if datetime == today %}
+                                <tr>
+                                    <td><p class="card-category"><span class="h6 text-success">Сегодня</span></p></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% elif datetime == yesterday %}
+                                <tr>
+                                    <td><p class="card-category"><span class="h6 text-success">Вчера</span></p></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td><p class="card-category"><span class="h6 text-success">{{ datetime }}</span></p></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
 
-                            </tr>
+                            {% for spending in spendings %}
+                                <tr>
+                                    <td>{{ spending.category.title }}</td>
+                                    <td>{{ spending.amount }} ₽</td>
+                                    <td>{{ spending.creation_date  }}</td>
+                                    {% if spending.category.group %}
+                                        <td>Групповая трата</td>
+                                    {% else %}
+                                        <td>Личная трата</td>
+                                    {% endif %}
+
+                                </tr>
+                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>

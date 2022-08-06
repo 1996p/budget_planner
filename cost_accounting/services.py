@@ -1,3 +1,5 @@
+import datetime
+
 from django.db.models import Sum
 from django.http import HttpRequest
 
@@ -62,7 +64,14 @@ def show_history(request: HttpRequest) -> dict:
     """Описывает бизнес-логику отображение истории расходов,
     создает контекстные переменные для шаблона"""
     spendings = Spending.objects.filter(payer=request.user).order_by('-creation_date')
+    spendings_per_day = defaultdict(list)
+    for spending in spendings:
+        spendings_per_day[spending.creation_date.date()].append(spending)
+
+    print(datetime.datetime.today().date() - datetime.timedelta(1))
     context = {
-        'spendings': spendings
+        'spendings_per_day': spendings_per_day.items(),
+        'today': datetime.datetime.today().date(),
+        'yesterday': datetime.datetime.today().date() - datetime.timedelta(1),
     }
     return context
