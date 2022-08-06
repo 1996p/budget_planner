@@ -50,3 +50,14 @@ class AddSpending(forms.ModelForm):
         model = Spending
         fields = ('category', 'amount')
         exclude = ('payer',)
+
+
+class CreateGroup(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'text'}
+
+    class Meta:
+        model = Group
+        fields = ('name', )

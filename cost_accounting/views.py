@@ -72,3 +72,13 @@ class SpendingsHistory(LoginRequiredMixin, View):
         return render(request, 'spendings-history.html', context)
 
 
+class GroupsInfo(LoginRequiredMixin, View):
+    """Отвечает за отображение информацию о группах пользователя"""
+    def get(self, request, *args, **kwargs):
+        context = display_user_groups(request)
+        return render(request, 'groups.html', context)
+
+    def post(self, request, *args, **kwargs):
+        create_user_group(request)
+        return redirect('groups')
+

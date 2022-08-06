@@ -75,3 +75,26 @@ def show_history(request: HttpRequest) -> dict:
         'yesterday': datetime.datetime.today().date() - datetime.timedelta(1),
     }
     return context
+
+
+def display_user_groups(request: HttpRequest) -> dict:
+    """Описывает бизнес-логику отображения групп пользователя"""
+    groups = Group.objects.filter(user=User.objects.get(username=request.user.username))
+    form = CreateGroup()
+    context = {
+        'groups': groups,
+        'form': form,
+    }
+
+    return context
+
+
+def create_user_group(request: HttpRequest) -> None:
+    """Отвечает за создания новой группы пользователем
+       По дефолту в ней один участник - ее создатель
+    """
+    new_group = Group.objects.create(name=request.POST['name'])
+    user = User.objects.get(username=request.user.username)
+    user.groups.add(new_group)
+    user.save()
+    new_group.save()

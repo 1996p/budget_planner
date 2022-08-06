@@ -1,0 +1,53 @@
+{% extends 'index.html'%}
+
+{% block content %}
+    <div class="content">
+        <div class="card card-tasks">
+            <div class="card-header ">
+                <h4 class="card-title">Мои группы</h4>
+            </div>
+            <div class="card-body ">
+                <div class="table-full-width">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Название</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td><span class="h6">{{ group.name }}</span></td>
+                                    <td class="td-actions text-right">
+                                        <div class="form-button-action">
+                                           <a href="#" data-toggle="tooltip" title="" class="btn btn-link btn-simple-danger" data-original-title="Выйти">
+                                                <i class="la la-arrow-circle-left"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form class="card " method="post" action="{% url 'groups' %}">
+                {% csrf_token %}
+                <div class="card-header">
+                    <div class="card-title">Создать группу</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">Название группы</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="card-action">
+                    <button class="btn btn-success">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
