@@ -28,8 +28,8 @@ class AddCategory(forms.ModelForm):
     """Форма добавления новой категории трат"""
     def __init__(self, *args, **kwargs):
         super(AddCategory, self).__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs = {'class': 'form-control form-control-lg'}
-        self.fields['group'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Название'}
+        self.fields['title'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Например, "Питомцы"...'}
+        self.fields['group'].widget.attrs = {'class': 'form-control form-control-lg'}
         self.fields['group'].queryset = Group.objects.all()
 
     class Meta:
@@ -44,11 +44,12 @@ class AddSpending(forms.ModelForm):
         self.fields['category'].queryset = Category.objects.filter(Q(creator__isnull=True) | Q(creator=user)
                                   | Q(group__user=User.objects.get(username=user.username))).distinct()
         self.fields['category'].widget.attrs = {'class': 'form-control form-control-lg'}
-        self.fields['amount'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'number', 'min': 0}
+        self.fields['amount'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'number', 'min': 0, 'placeholder': '300...'}
+        self.fields['short_description'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Колбаса - 200р, Газировка - 70р, ну и по-мелочи купил...'}
 
     class Meta:
         model = Spending
-        fields = ('category', 'amount')
+        fields = ('category', 'amount', 'short_description')
         exclude = ('payer',)
 
 
@@ -56,7 +57,7 @@ class CreateGroup(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'text'}
+        self.fields['name'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'text', 'placeholder': 'Например, "Команда разработки"'}
 
     class Meta:
         model = Group

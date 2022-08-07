@@ -60,7 +60,28 @@
 											<li class="nav-item"><a class="btn btn-default btn-link" href="{% url 'history' %}"><i class="la la-history"></i> История</a></li>
 										</ul>
 									</div>
-								</div>
+								     <div class="col-md-12">
+                                        <table class="table table-hover ">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Категория</th>
+                                                    <th scope="col">Общая сумма</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for category_properties in category_amount %}
+                                                    <tr>
+                                                        {% for property in category_properties %}
+                                                            <td class="spending-amount">
+                                                                {{ property }}
+                                                            </td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                     </div>
+                                </div>
 							</div>
                         <div class="col-md-6">
 								<div class="card">
@@ -186,6 +207,10 @@
                                         <div class="form-group">
                                             <label for="{{ add_spending_form.title.id_for_label }}">Потраченная сумма</label>
                                             {{ add_spending_form.amount}}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ add_spending_form.short_description.id_for_label }}">Краткое описание</label>
+                                            {{ add_spending_form.short_description }}
                                         </div>
                                         <div class="form-group">
                                             <label for="{{ add_spending_form.group.id_for_label }}">Категория</label>

@@ -28,7 +28,8 @@ def index_page_logic(request: HttpRequest) -> dict:
         'add_spending_form': add_spending_form,
         'category_titles': category_amount.keys(),
         'category_amounts': category_amount.values(),
-        'joined_groups': joined_groups
+        'joined_groups': joined_groups,
+        'category_amount': category_amount.items()
     }
 
     return context
@@ -107,10 +108,12 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
     group = Group.objects.get(pk=pk)
     spendings = Spending.objects.filter(category__group=group).order_by('-creation_date')
     spendings_per_day = defaultdict(list)
+    common_category_amount = defaultdict(int)
 
     for spending in spendings:
         payers[spending.payer.username] += spending.amount
         spendings_per_day[spending.creation_date.date()].append(spending)
+        common_category_amount[spending.category.title] += spending.amount
 
     context = {
         'payers_name': payers.keys(),
@@ -118,5 +121,7 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
         'spendings_per_day': spendings_per_day.items(),
         'today': datetime.datetime.today().date(),
         'yesterday': datetime.datetime.today().date() - datetime.timedelta(1),
+        'amount': spendings.aggregate(Sum('amount')).get('amount__sum'),
+        'category_amount': common_category_amount.items()
     }
     return context
