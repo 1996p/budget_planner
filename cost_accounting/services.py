@@ -98,3 +98,25 @@ def create_user_group(request: HttpRequest) -> None:
     user.groups.add(new_group)
     user.save()
     new_group.save()
+
+
+def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
+    """Отвечает за создание контекстных переменных
+    для отображения инфомарции о конкретной пользовательской группе"""
+    payers = defaultdict(int)
+    group = Group.objects.get(pk=pk)
+    spendings = Spending.objects.filter(category__group=group).order_by('-creation_date')
+    spendings_per_day = defaultdict(list)
+
+    for spending in spendings:
+        payers[spending.payer.username] += spending.amount
+        spendings_per_day[spending.creation_date.date()].append(spending)
+
+    context = {
+        'payers_name': payers.keys(),
+        'amounts': payers.values(),
+        'spendings_per_day': spendings_per_day.items(),
+        'today': datetime.datetime.today().date(),
+        'yesterday': datetime.datetime.today().date() - datetime.timedelta(1),
+    }
+    return context

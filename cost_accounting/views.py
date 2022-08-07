@@ -73,7 +73,8 @@ class SpendingsHistory(LoginRequiredMixin, View):
 
 
 class GroupsInfo(LoginRequiredMixin, View):
-    """Отвечает за отображение информацию о группах пользователя"""
+    """Отвечает за отображение информацию о группах пользователя,
+        А так же за создание новых пользовательских группах"""
     def get(self, request, *args, **kwargs):
         context = display_user_groups(request)
         return render(request, 'groups.html', context)
@@ -82,3 +83,9 @@ class GroupsInfo(LoginRequiredMixin, View):
         create_user_group(request)
         return redirect('groups')
 
+
+class CertainGroup(LoginRequiredMixin, View):
+    """Отвечает за отображение определенной пользовательской группы"""
+    def get(self, request, *args, **kwargs):
+        context = display_certain_user_group(request, kwargs.get('id'))
+        return render(request, 'certain-group.html', context)

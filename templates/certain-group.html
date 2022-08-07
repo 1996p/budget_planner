@@ -1,0 +1,84 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Users Statistics</h4>
+                        <p class="card-category">
+                        Users statistics this month</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="monthlyChart" class="chart chart-pie"></div>
+                    {% for amount in amounts %}
+                        <span class="spending-percents" style="visibility: hidden">
+                                {{ amount }}
+                        </span>
+                    {% endfor %}
+                    {% for name in payers_name %}
+                        <span class="spending-title" style="visibility: hidden">
+                                {{ name }}
+                        </span>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header ">
+                        <h4 class="card-title">История расходов</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-head-bg-success table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Категория</th>
+                                    <th scope="col">Сумма</th>
+                                    <th scope="col">Дата</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for datetime, spendings in spendings_per_day %}
+                                    {% if datetime == today %}
+                                        <tr>
+                                            <td><p class="card-category"><span class="h6 text-success">Сегодня</span></p></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% elif datetime == yesterday %}
+                                        <tr>
+                                            <td><p class="card-category"><span class="h6 text-success">Вчера</span></p></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td><p class="card-category"><span class="h6 text-success">{{ datetime }}</span></p></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% for spending in spendings %}
+                                        <tr>
+                                            <td>{{ spending.category.title }}</td>
+                                            <td>{{ spending.amount }} ₽</td>
+                                            <td>{{ spending.creation_date  }}</td>
+                                            <td>{{ spending.payer }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

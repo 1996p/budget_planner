@@ -10,5 +10,6 @@ urlpatterns = [
     path('create-spending/', CreateNewSpending.as_view(), name='create-spending'),
     path('create-category/', CreateNewCategory.as_view(), name='create-category'),
     path('history/', SpendingsHistory.as_view(), name='history'),
-    path('groups/', GroupsInfo.as_view(), name='groups')
+    path('groups/', GroupsInfo.as_view(), name='groups'),
+    path('groups/<int:id>/', CertainGroup.as_view(), name='certain-group')
 ]

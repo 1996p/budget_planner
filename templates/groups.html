@@ -17,7 +17,7 @@
                         <tbody>
                             {% for group in groups %}
                                 <tr>
-                                    <td><span class="h6">{{ group.name }}</span></td>
+                                    <td><a href="{% url 'certain-group' group.pk %}" class="h6">{{ group.name }}</a></td>
                                     <td class="td-actions text-right">
                                         <div class="form-button-action">
                                            <a href="#" data-toggle="tooltip" title="" class="btn btn-link btn-simple-danger" data-original-title="Выйти">
@@ -43,6 +43,7 @@
                         <label for="{{ form.name.id_for_label }}">Название группы</label>
                         {{ form.name }}
                     </div>
+
                 </div>
                 <div class="card-action">
                     <button class="btn btn-success">Создать</button>
