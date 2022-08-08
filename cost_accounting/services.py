@@ -69,7 +69,6 @@ def show_history(request: HttpRequest) -> dict:
     for spending in spendings:
         spendings_per_day[spending.creation_date.date()].append(spending)
 
-    print(datetime.datetime.today().date() - datetime.timedelta(1))
     context = {
         'spendings_per_day': spendings_per_day.items(),
         'today': datetime.datetime.today().date(),
@@ -110,6 +109,8 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
     spendings_per_day = defaultdict(list)
     common_category_amount = defaultdict(int)
 
+    create_invite_form = CreateGroupInviteForm()
+
     for spending in spendings:
         payers[spending.payer.username] += spending.amount
         spendings_per_day[spending.creation_date.date()].append(spending)
@@ -122,6 +123,58 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
         'today': datetime.datetime.today().date(),
         'yesterday': datetime.datetime.today().date() - datetime.timedelta(1),
         'amount': spendings.aggregate(Sum('amount')).get('amount__sum'),
-        'category_amount': common_category_amount.items()
+        'category_amount': common_category_amount.items(),
+        'form': create_invite_form,
+        'group_id': group.id
     }
+    return context
+
+
+def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
+    """Отвечает за создания в БД приглашения пользователя в группу
+       Значения новой контекстной переменной 'creation_invite_status':
+       "0" - приглашение было создано,
+       "1" - приглашение уже создано, но пользователь на него не ответил,
+       "2" - нет такого пользователя, чтобы пригласить его
+    """
+    group = Group.objects.get(pk=group_id)
+    context = display_certain_user_group(request, group_id)
+    try:
+        guest = User.objects.get(username=request.POST['guest'])
+    except Exception:
+        context['creation_invite_status'] = 2
+        context['guest_username'] = request.POST['guest']
+        context['group_name'] = group.name
+        return context
+
+    inviter = User.objects.get(username=request.user.username)
+    try:
+        invite = InviteToGroup.objects.get(
+            to_group=group,
+            guest=guest
+        )
+    except Exception:
+        invite = InviteToGroup.objects.create(
+            to_group=group,
+            inviter=inviter,
+            guest=guest
+        )
+
+    else:
+        if invite.status == 'NC':
+            context['creation_invite_status'] = 1
+            context['guest_username'] = request.POST['guest']
+            context['group_name'] = group.name
+            return context
+        else:
+            invite = InviteToGroup.objects.create(
+                to_group=group,
+                inviter=inviter,
+                guest=guest
+            )
+
+    invite.save()
+    context['creation_invite_status'] = 0
+    context['guest_username'] = request.POST['guest']
+    context['group_name'] = group.name
     return context

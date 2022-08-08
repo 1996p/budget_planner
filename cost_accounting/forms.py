@@ -45,7 +45,9 @@ class AddSpending(forms.ModelForm):
                                   | Q(group__user=User.objects.get(username=user.username))).distinct()
         self.fields['category'].widget.attrs = {'class': 'form-control form-control-lg'}
         self.fields['amount'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'number', 'min': 0, 'placeholder': '300...'}
-        self.fields['short_description'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Колбаса - 200р, Газировка - 70р, ну и по-мелочи купил...'}
+
+        self.fields['short_description'].widget.attrs = {'class': 'form-control form-control-lg',
+                                                         'placeholder': 'Колбаса - 200р, Газировка - 70р, ну и по-мелочи купил...'}
 
     class Meta:
         model = Spending
@@ -54,7 +56,7 @@ class AddSpending(forms.ModelForm):
 
 
 class CreateGroup(forms.ModelForm):
-
+    """Форма создания новой пользовательской группы"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs = {'class': 'form-control form-control-lg', 'type': 'text', 'placeholder': 'Например, "Команда разработки"'}
@@ -62,3 +64,14 @@ class CreateGroup(forms.ModelForm):
     class Meta:
         model = Group
         fields = ('name', )
+
+
+class CreateGroupInviteForm(forms.ModelForm):
+    """Форма создания приглашения пользователя в группу"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['guest'].widget = forms.TextInput(attrs={'class': 'form-control form-control-lg', 'type': 'text', 'placeholder': 'Например, "Иннокентий"'})
+
+    class Meta:
+        model = InviteToGroup
+        fields = ('guest', )

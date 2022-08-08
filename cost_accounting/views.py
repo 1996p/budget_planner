@@ -85,7 +85,15 @@ class GroupsInfo(LoginRequiredMixin, View):
 
 
 class CertainGroup(LoginRequiredMixin, View):
-    """Отвечает за отображение определенной пользовательской группы"""
+    """Отвечает за отображение определенной пользовательской группы,
+       А так же за создание приглашений пользователей в эту группу
+    """
     def get(self, request, *args, **kwargs):
         context = display_certain_user_group(request, kwargs.get('id'))
         return render(request, 'certain-group.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = create_invite_into_group(request, kwargs.get('id'))
+        return render(request, 'certain-group.html', context)
+
+

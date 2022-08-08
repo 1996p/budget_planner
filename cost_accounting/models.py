@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, Group
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -40,3 +41,23 @@ class ExtendedUser(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class InviteToGroup(models.Model):
+    """Описывает сущность приглашения в пользовательскую группу"""
+    class InviteStatus(models.TextChoices):
+        accepted = 'AC', _('ACCEPTED')
+        denied = 'DN', _('DENIED')
+        not_checked = 'NC', _('NOT CHECKED')
+
+    to_group = models.ForeignKey(Group, on_delete=models.CASCADE, verbose_name='В какую группу')
+    guest = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Приглашенный', related_name="related_guest")
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Тот, кто приглашает', related_name="related_inviter")
+    status = models.CharField(max_length=2, verbose_name='Статус приглашения', choices=InviteStatus.choices, default=InviteStatus.not_checked)
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания приглашения')
+
+    def __str__(self):
+        return f'{self.inviter.username} приглашает {self.guest.username} -> {self.to_group.name}'
+
+    class Meta:
+        db_table = 'invite_to_group'

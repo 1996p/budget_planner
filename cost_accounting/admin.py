@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Spending)
 admin.site.register(Category)
 admin.site.register(ExtendedUser)
+admin.site.register(InviteToGroup)
