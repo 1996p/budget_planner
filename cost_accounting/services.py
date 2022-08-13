@@ -115,6 +115,7 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
         payers[spending.payer.username] += spending.amount
         spendings_per_day[spending.creation_date.date()].append(spending)
         common_category_amount[spending.category.title] += spending.amount
+    group_users = group.user_set.all()
 
     context = {
         'payers_name': payers.keys(),
@@ -125,7 +126,8 @@ def display_certain_user_group(request: HttpRequest, pk: int) -> dict:
         'amount': spendings.aggregate(Sum('amount')).get('amount__sum'),
         'category_amount': common_category_amount.items(),
         'form': create_invite_form,
-        'group_id': group.id
+        'group': group,
+        'group_users': group_users,
     }
     return context
 
@@ -144,7 +146,6 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
     except Exception:
         context['creation_invite_status'] = 2
         context['guest_username'] = request.POST['guest']
-        context['group_name'] = group.name
         return context
 
     inviter = User.objects.get(username=request.user.username)
@@ -164,7 +165,6 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
         if invite.status == 'NC':
             context['creation_invite_status'] = 1
             context['guest_username'] = request.POST['guest']
-            context['group_name'] = group.name
             return context
         else:
             invite = InviteToGroup.objects.create(
@@ -176,5 +176,23 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
     invite.save()
     context['creation_invite_status'] = 0
     context['guest_username'] = request.POST['guest']
-    context['group_name'] = group.name
     return context
+
+
+def display_my_cabinet(request: HttpRequest, username: str) -> dict:
+    """Отвечает за создание контекстных переменных для отображения личного кабинета"""
+    user = User.objects.get(username=username)
+    context = {
+        'user': user
+    }
+
+    return context
+
+
+def leave_group(request: HttpRequest, group_id: int) -> None:
+    """Реализует логику выхода пользователя из группы"""
+    user = User.objects.get(username=request.user.username)
+    group = Group.objects.get(pk=group_id)
+    user.groups.remove(group)
+    user.save()
+

@@ -58,7 +58,47 @@
         </div>
         <div class="row">
             <div class="col-md-5">
-                <form class="card " method="post" action="{% url 'certain-group' group_id %}">
+                <div class="card card-tasks">
+                    <div class="card-header ">
+                        <h4 class="card-title">Состав группы</h4>
+                    </div>
+                    <div class="card-body ">
+                        <div class="table-full-width">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Никнейм</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in group_users %}
+                                        <tr>
+                                            <td>{{ user.username }}</td>
+                                            <td class="td-actions text-right">
+                                                {% if user.username == request.user.username %}
+                                                <div class="form-button-action">
+                                                <button type="button" class="btn btn-link text">
+                                                    Вы
+                                                </button>
+                                                </div>
+                                                {% else %}
+                                                    <div class="form-button-action">
+                                                        <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-simple-danger" data-original-title="Исключить">
+                                                            <i class="la la-times"></i>
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-7">
+                <form class="card " method="post" action="{% url 'certain-group' group.id %}">
                     {% csrf_token %}
                     <div class="card-header">
                         <div class="card-title">Пригласить участника</div>
@@ -69,15 +109,15 @@
                             {{ form.guest }}
                             {% if creation_invite_status == 0 %}
                                 <div class="text-primary h6">
-                                    {{ guest_username }} успешно получил приглашение в группу {{ group_name }}
+                                    {{ guest_username }} успешно получил приглашение в группу "{{ group.name }}"
                                 </div>
                             {% elif creation_invite_status == 1 %}
                                 <div class="text-warning h6">
-                                    {{ guest_username }} уже получил приглашение в группу {{ group_name }}, но еще не ответил на него
+                                    {{ guest_username }} уже получил приглашение в группу "{{ group.name}}", но еще не ответил на него
                                 </div>
                             {% elif creation_invite_status == 2 %}
                                 <div class="text-danger h6">
-                                    В системе нет такого пользователя "{{ guest_username }}"
+                                    В системе нет такого пользователя "{{ guest.name }}"
                                 </div>
                             {% endif %}
                         </div>

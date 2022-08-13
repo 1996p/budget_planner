@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="content">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="control-label">
+                        Имя
+                    </label>
+                    <p class="form-control-static">{{ user.first_name }}</p>
+                        <label class="control-label">
+                        Фамилия
+                    </label>
+                    <p class="form-control-static">{{ user.last_name }}</p>
+                        <label class="control-label">
+                        Никнейм
+                    </label>
+                    <p class="form-control-static">{{ user.username }}</p>
+                        <label class="control-label">
+                        Почта
+                    </label>
+                    <p class="form-control-static">{{ user.email }}</p>
+                    <label class="control-label">
+                        Дата регистрации
+                    </label>
+                    <p class="form-control-static">{{ user.date_joined }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

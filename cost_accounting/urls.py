@@ -12,4 +12,6 @@ urlpatterns = [
     path('history/', SpendingsHistory.as_view(), name='history'),
     path('groups/', GroupsInfo.as_view(), name='groups'),
     path('groups/<int:id>/', CertainGroup.as_view(), name='certain-group'),
+    path('my/<str:username>/', MyCabinet.as_view(), name='my-cabinet'),
+    path('groups/leave/<int:group_id>/', LeaveGroup.as_view(), name='leave-group')
 ]

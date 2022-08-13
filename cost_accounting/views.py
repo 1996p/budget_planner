@@ -97,3 +97,17 @@ class CertainGroup(LoginRequiredMixin, View):
         return render(request, 'certain-group.html', context)
 
 
+class MyCabinet(View):
+    """Отвечает за отображение личного кабинета"""
+    def get(self, request, *args, **kwargs):
+        context = display_my_cabinet(request, kwargs.get('username'))
+
+        return render(request, 'my-cabinet.html', context)
+
+
+class LeaveGroup(View):
+    """Отвечает за выход пользователя из группы"""
+    def get(self, request, *args, **kwargs):
+        leave_group(request, kwargs.get('group_id'))
+        return redirect('groups')
+
