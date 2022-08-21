@@ -38,7 +38,8 @@ def index_page_logic(request: HttpRequest) -> dict:
 def create_new_spending(request: HttpRequest) -> None:
     """Описывает бизнес-логику добавления новых расходов"""
     user = request.user
-    _, spending_amount, category_id = request.POST.values()
+    print(request.POST)
+    _, spending_amount, short_description, category_id = request.POST.values()
     category = Category.objects.get(pk=category_id)
     new_spending = Spending.objects.create(payer=user,
                                            amount=spending_amount,
@@ -138,6 +139,7 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
        "0" - приглашение было создано,
        "1" - приглашение уже создано, но пользователь на него не ответил,
        "2" - нет такого пользователя, чтобы пригласить его
+       "3" - пользователь уже в группе
     """
     group = Group.objects.get(pk=group_id)
     context = display_certain_user_group(request, group_id)
@@ -149,6 +151,10 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
         return context
 
     inviter = User.objects.get(username=request.user.username)
+    if guest == inviter:
+        context['creation_invite_status'] = 4
+        context['guest_username'] = request.POST['guest']
+        return context
     try:
         invite = InviteToGroup.objects.get(
             to_group=group,
@@ -162,8 +168,12 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
         )
 
     else:
-        if invite.status == 'NC':
+        if invite.status == "NC":
             context['creation_invite_status'] = 1
+            context['guest_username'] = request.POST['guest']
+            return context
+        elif invite.status == "AC":
+            context['creation_invite_status'] = 3
             context['guest_username'] = request.POST['guest']
             return context
         else:

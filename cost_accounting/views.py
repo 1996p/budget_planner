@@ -7,6 +7,8 @@ from django.views import View
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .services import *
+from .serializers import *
+from rest_framework import generics
 # Create your views here.
 
 
@@ -110,4 +112,5 @@ class LeaveGroup(View):
     def get(self, request, *args, **kwargs):
         leave_group(request, kwargs.get('group_id'))
         return redirect('groups')
+
 

@@ -109,15 +109,23 @@
                             {{ form.guest }}
                             {% if creation_invite_status == 0 %}
                                 <div class="text-primary h6">
-                                    {{ guest_username }} успешно получил приглашение в группу "{{ group.name }}"
+                                    {{ guest_username }} успешно получил приглашение в группу
                                 </div>
                             {% elif creation_invite_status == 1 %}
                                 <div class="text-warning h6">
-                                    {{ guest_username }} уже получил приглашение в группу "{{ group.name}}", но еще не ответил на него
+                                    {{ guest_username }} уже получил приглашение в группу , но еще не ответил на него
                                 </div>
                             {% elif creation_invite_status == 2 %}
                                 <div class="text-danger h6">
-                                    В системе нет такого пользователя "{{ guest.name }}"
+                                    В системе нет такого пользователя
+                                </div>
+                            {% elif creation_invite_status == 3 %}
+                                <div class="text h6" style="color: #1e7e34">
+                                    Этот пользователь уже в группе
+                                </div>
+                            {% elif creation_invite_status == 4 %}
+                                <div class="text-danger h6">
+                                    Вы не можете пригласить себя
                                 </div>
                             {% endif %}
                         </div>

@@ -61,3 +61,4 @@ class InviteToGroup(models.Model):
 
     class Meta:
         db_table = 'invite_to_group'
+        unique_together = ('guest', 'inviter')

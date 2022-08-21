@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-iwz*zl+q+jp$cksa%i9nl1v1os%^*3^1pu*d2wgvu)ekl@6y&s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.0.15', '90.189.170.196', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cost_accounting.apps.CostAccountingConfig',
-    'crispy_forms'
+    'crispy_forms',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
