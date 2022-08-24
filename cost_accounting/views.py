@@ -102,7 +102,7 @@ class CertainGroup(LoginRequiredMixin, View):
 class MyCabinet(View):
     """Отвечает за отображение личного кабинета"""
     def get(self, request, *args, **kwargs):
-        context = display_my_cabinet(request, kwargs.get('username'))
+        context = display_my_cabinet(request)
 
         return render(request, 'my-cabinet.html', context)
 

@@ -26,11 +26,11 @@ class UserAuthentication(AuthenticationForm):
 
 class AddCategory(forms.ModelForm):
     """Форма добавления новой категории трат"""
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(AddCategory, self).__init__(*args, **kwargs)
         self.fields['title'].widget.attrs = {'class': 'form-control form-control-lg', 'placeholder': 'Например, "Питомцы"...'}
         self.fields['group'].widget.attrs = {'class': 'form-control form-control-lg'}
-        self.fields['group'].queryset = Group.objects.all()
+        self.fields['group'].queryset = Group.objects.filter(user__username=user.username)
 
     class Meta:
         model = Category

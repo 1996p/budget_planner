@@ -12,7 +12,7 @@ def index_page_logic(request: HttpRequest) -> dict:
     """Описывает создание контекстных переменных для домашней страницы"""
     spendings = Spending.objects.filter(payer=request.user)
     amount = spendings.aggregate(Sum('amount'))['amount__sum']
-    add_category_form = AddCategory()
+    add_category_form = AddCategory(user=request.user)
     add_spending_form = AddSpending(user=request.user)
     category_amount = defaultdict(int)
     joined_groups = Group.objects.filter(user=User.objects.get(username=request.user.username)).count
@@ -38,7 +38,6 @@ def index_page_logic(request: HttpRequest) -> dict:
 def create_new_spending(request: HttpRequest) -> None:
     """Описывает бизнес-логику добавления новых расходов"""
     user = request.user
-    print(request.POST)
     _, spending_amount, short_description, category_id = request.POST.values()
     category = Category.objects.get(pk=category_id)
     new_spending = Spending.objects.create(payer=user,
@@ -189,9 +188,9 @@ def create_invite_into_group(request: HttpRequest, group_id: int) -> dict:
     return context
 
 
-def display_my_cabinet(request: HttpRequest, username: str) -> dict:
+def display_my_cabinet(request: HttpRequest) -> dict:
     """Отвечает за создание контекстных переменных для отображения личного кабинета"""
-    user = User.objects.get(username=username)
+    user = User.objects.get(username=request.user.username)
     context = {
         'user': user
     }
