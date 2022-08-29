@@ -17,6 +17,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            {% if groups %}
                                 {% for group in groups %}
                                     <tr>
                                         <td><a href="{% url 'certain-group' group.pk %}" class="h6">{{ group.name }}</a></td>
@@ -29,6 +30,14 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <span class=" h5">Вы не состоите ни в какой группе</span>
+                                    </td>
+                                </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>

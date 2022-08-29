@@ -11,7 +11,8 @@ from collections import defaultdict
 def index_page_logic(request: HttpRequest) -> dict:
     """Описывает создание контекстных переменных для домашней страницы"""
     spendings = Spending.objects.filter(payer=request.user)
-    amount = spendings.aggregate(Sum('amount'))['amount__sum']
+    amount = spendings.aggregate(Sum('amount'))['amount__sum'] if spendings.aggregate(Sum('amount'))['amount__sum'] \
+        else 0
     add_category_form = AddCategory(user=request.user)
     add_spending_form = AddSpending(user=request.user)
     category_amount = defaultdict(int)

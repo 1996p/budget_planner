@@ -69,15 +69,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for category_properties in category_amount %}
+                                                {% if category_amount %}
+                                                    {% for category_properties in category_amount %}
+                                                        <tr>
+                                                            {% for property in category_properties %}
+                                                                <td class="spending-amount">
+                                                                    {{ property }}
+                                                                </td>
+                                                            {% endfor %}
+                                                        </tr>
+                                                    {% endfor %}
+                                                {% else %}
                                                     <tr>
-                                                        {% for property in category_properties %}
-                                                            <td class="spending-amount">
-                                                                {{ property }}
-                                                            </td>
-                                                        {% endfor %}
+                                                        <td>
+                                                            <span class="h6">Вы не еще нихуя не потратили</span>
+                                                        </td>
                                                     </tr>
-                                                {% endfor %}
+                                                {% endif %}
                                             </tbody>
                                         </table>
                                      </div>
@@ -86,22 +94,26 @@
                         <div class="col-md-6">
 								<div class="card">
 									<div class="card-header">
-										<h4 class="card-title">Users Statistics</h4>
+										<h4 class="card-title">Ваша статистика</h4>
 										<p class="card-category">
-										Users statistics this month</p>
+										Статистика за все время</p>
 									</div>
 									<div class="card-body">
-										<div id="monthlyChart" class="chart chart-pie"></div>
-                                    {% for amount in category_amounts %}
-                                        <span class="spending-percents" style="visibility: hidden">
-                                                {{ amount }}
-                                        </span>
-                                    {% endfor %}
-                                    {% for title in category_titles %}
-                                        <span class="spending-title" style="visibility: hidden">
-                                                {{ title }}
-                                        </span>
-                                    {% endfor %}
+                                    {% if category_amounts %}
+                                            <div id="monthlyChart" class="chart chart-pie"></div>
+                                        {% for amount in category_amounts %}
+                                            <span class="spending-percents" style="visibility: hidden">
+                                                    {{ amount }}
+                                            </span>
+                                        {% endfor %}
+                                        {% for title in category_titles %}
+                                            <span class="spending-title" style="visibility: hidden">
+                                                    {{ title }}
+                                            </span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="text-center h6">Вы нихуя не купили еще</div>
+                                    {% endif %}
 									</div>
 								</div>
 							</div>
@@ -218,7 +230,7 @@
                                         </div>
                                     </div>
                                     <div class="card-action">
-                                        <button class="btn btn-success">Submit</button>
+                                        <button class="btn btn-success">Добавить</button>
                                     </div>
                                 </form>
                             </div>
@@ -239,7 +251,7 @@
                                         </div>
                                     </div>
                                     <div class="card-action">
-                                        <button class="btn btn-success">Submit</button>
+                                        <button class="btn btn-success">Создать</button>
                                     </div>
                                 </form>
                             </div>

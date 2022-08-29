@@ -17,6 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                    {% if spendings_per_day %}
                         {% for datetime, spendings in spendings_per_day %}
                             {% if datetime == today %}
                                 <tr>
@@ -55,6 +56,16 @@
                                 </tr>
                             {% endfor %}
                         {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>
+                                <span class="h5">Здесь пока пусто (:</span>
+                            </td>
+                            <td></td> {# Заглушка-костыль #}
+                            <td></td> {# Заглушка-костыль #}
+                            <td></td> {# Заглушка-костыль #}
+                        </tr>
+                    {% endif %}
                     </tbody>
                 </table>
             </div>

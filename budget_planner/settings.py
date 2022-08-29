@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'budget_planner',
         'USER': 'postgres',
-        'PASSWORD': '1996',
+        'PASSWORD': 'Sykableat11',
         'HOST': 'localhost',
         'PORT': '5432',
     }
